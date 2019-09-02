@@ -2,7 +2,6 @@ import Axios, {
   // AxiosInstance,
   // AxiosStatic,
   AxiosPromise,
-  AxiosResponse,
 } from 'axios';
 import { ThunkDispatch } from 'redux-thunk';
 
@@ -56,17 +55,12 @@ interface BuildThunkProps {
 
 interface ThunkProps {
   data?: Object,
-  parametricEndpoint: string,
+  parametricEndpoint?: string,
 }
 
 interface ThunkDispatchProps {
   type: string,
   payload?: any,
-}
-
-export interface ThunkResult {
-  error: boolean,
-  response: AxiosResponse<any>,
 }
 
 const buildThunkFactory = ({
@@ -87,10 +81,9 @@ const buildThunkFactory = ({
       data,
     );
     dispatch({ type: success, payload: response.data });
-    return { error: false, response };
   } catch (error) {
     dispatch({ type: failure, payload: error.response });
-    return { error: true, response: error.response };
+    throw error;
   }
 };
 

@@ -43,11 +43,11 @@ const LoginForm = () => {
       setFormErrors({ setter: setErrors, errors: error.inner });
       return;
     }
-    const postResult = await dispatch(postLogin({ data: values })) as any;
-    if (!postResult.error) {
+    try {
+      await dispatch(postLogin({ data: values }));
       setValues(defaultValues);
       // redirect user beyond the login page
-    } else {
+    } catch (error) {
       // handle login error
     }
   };

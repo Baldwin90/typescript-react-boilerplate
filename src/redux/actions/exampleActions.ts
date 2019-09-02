@@ -44,7 +44,7 @@ interface buildThunkFactoryProps {
 
 interface EndPointProps {
   url: string,
-  endpoint: string,
+  endpoint?: string,
 }
 
 interface BuildThunkProps {
@@ -55,7 +55,8 @@ interface BuildThunkProps {
 }
 
 interface ThunkProps {
-  data: Object,
+  data?: Object,
+  parametricEndpoint: string,
 }
 
 interface ThunkDispatchProps {
@@ -71,17 +72,20 @@ export interface ThunkResult {
 const buildThunkFactory = ({
   restFunction,
 }: buildThunkFactoryProps) => ({
-  url, endpoint,
+  url, endpoint = '',
 }: EndPointProps) => ({
   restCallType, start, success, failure,
 }: BuildThunkProps) => ({
-  data,
+  data = {}, parametricEndpoint = '',
 }: ThunkProps) => async (
   dispatch: ThunkDispatch<ThunkDispatchProps, void, any>,
 ) => {
   dispatch({ type: start });
   try {
-    const response = await restFunction()[restCallType](`${url}${endpoint}`, data);
+    const response = await restFunction()[restCallType](
+      `${url}${endpoint}${parametricEndpoint}`,
+      data,
+    );
     dispatch({ type: success, payload: response.data });
     return { error: false, response };
   } catch (error) {

@@ -8,6 +8,7 @@ import {
 import './ExampleComponent.scss';
 
 import { exampleFunction } from '../../redux/actions';
+import { ExampleReducerState } from '../../redux/reducers/exampleReducer';
 // import { buildMapStateToProps } from '../../utils';
 
 // interface ExampleComponentProps {
@@ -18,7 +19,9 @@ import { exampleFunction } from '../../redux/actions';
 // const ExampleComponent = ({ exampleVariable, click }: ExampleComponentProps) => {
 const ExampleComponent = () => { // hooks
   const dispatch = useDispatch(); // hooks
-  const exampleVariable = useSelector((state: any) => state.exampleVariable); // hooks
+  const exampleVariable = useSelector(
+    (state: ExampleReducerState) => state.exampleVariable,
+  ); // hooks
 
   return (
     <>

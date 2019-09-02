@@ -17,7 +17,24 @@ import {
   EXAMPLE_TYPE,
 } from '../actions';
 
-const initialState = {
+export interface ExampleReducerState {
+  exampleVariable: string,
+  data: [
+    {
+      id: number,
+    }
+  ],
+  sendingLogin: boolean,
+  errorLoggingIn: boolean,
+  loadingTabs: boolean,
+  errorLoadingTabs: boolean,
+  sendingTabData: boolean,
+  errorSendingTab: boolean,
+  deletingTab: boolean,
+  errorDeletingTab: boolean,
+}
+
+const initialState: ExampleReducerState = {
   exampleVariable: 'Example',
   data: [
     {

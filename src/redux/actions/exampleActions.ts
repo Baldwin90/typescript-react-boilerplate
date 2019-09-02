@@ -1,4 +1,9 @@
-import Axios, { AxiosInstance, AxiosStatic, AxiosPromise } from 'axios';
+import Axios, {
+  // AxiosInstance,
+  // AxiosStatic,
+  AxiosPromise,
+  AxiosResponse,
+} from 'axios';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { axiosWithAuth } from '../../utils';
@@ -37,56 +42,65 @@ interface buildThunkFactoryProps {
   },
 }
 
-
-interface endPointProps {
+interface EndPointProps {
   url: string,
-  query: string,
+  endpoint: string,
 }
 
-interface buildThunkProps {
+interface BuildThunkProps {
   restCallType: 'get' | 'post' | 'put' | 'delete',
   start: string,
   success: string,
   failure: string,
 }
 
-interface thunkProps {
+interface ThunkProps {
   data: Object,
 }
 
-interface thunkDispatchProps {
+interface ThunkDispatchProps {
   type: string,
   payload?: any,
 }
 
-const buildThunkFactory = ({ restFunction }: buildThunkFactoryProps) => ({
-  url, query,
-}: endPointProps) => ({
+export interface ThunkResult {
+  error: boolean,
+  response: AxiosResponse<any>,
+}
+
+const buildThunkFactory = ({
+  restFunction,
+}: buildThunkFactoryProps) => ({
+  url, endpoint,
+}: EndPointProps) => ({
   restCallType, start, success, failure,
-}: buildThunkProps) => ({ data }: thunkProps) => (
-  async (dispatch: ThunkDispatch<thunkDispatchProps, {}, any>) => {
-    dispatch({ type: start });
-    try {
-      const response = await restFunction()[restCallType](`${url}${query}`, data);
-      dispatch({ type: success, payload: response.data });
-      return { error: false, response };
-    } catch (error) {
-      dispatch({ type: failure, payload: error.response });
-      return { error: true, response: error.response };
-    }
-  });
+}: BuildThunkProps) => ({
+  data,
+}: ThunkProps) => async (
+  dispatch: ThunkDispatch<ThunkDispatchProps, void, any>,
+) => {
+  dispatch({ type: start });
+  try {
+    const response = await restFunction()[restCallType](`${url}${endpoint}`, data);
+    dispatch({ type: success, payload: response.data });
+    return { error: false, response };
+  } catch (error) {
+    dispatch({ type: failure, payload: error.response });
+    return { error: true, response: error.response };
+  }
+};
 
 const buildAxiosThunk = buildThunkFactory({ restFunction: () => Axios });
 const buildAxiosWithAuthThunk = buildThunkFactory({ restFunction: axiosWithAuth });
 
-export const postLogin = buildAxiosThunk({ url: exampleMainUrl, query: '/login' })({
+export const postLogin = buildAxiosThunk({ url: exampleMainUrl, endpoint: '/login' })({
   restCallType: POST,
   start: POST_LOGIN_START,
   success: POST_LOGIN_SUCCESS,
   failure: POST_LOGIN_FAILURE,
 });
 
-const buildExampleEndPointThunk = buildAxiosWithAuthThunk({ url: exampleMainUrl, query: '/example' });
+const buildExampleEndPointThunk = buildAxiosWithAuthThunk({ url: exampleMainUrl, endpoint: '/example' });
 export const getExampleData = buildExampleEndPointThunk({
   restCallType: GET,
   start: GET_DATA_WITH_AUTH_START,

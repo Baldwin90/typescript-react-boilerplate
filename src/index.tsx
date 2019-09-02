@@ -7,16 +7,16 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import './index.scss';
 
-// import { tabsReducer } from './redux/reducers';
+import { exampleReducer } from './redux/reducers';
 import App from './App';
 
-// const store = createStore(tabsReducer, applyMiddleware(thunk));
+const store = createStore(exampleReducer, applyMiddleware(thunk));
 
 ReactDOM.render(
-  // <Provider store={/* store */}>
+  <Provider store={store}>
     <Router>
       <App />
-    </Router>,
-  // </Provider>,
-  document.getElementById('root')
+    </Router>
+  </Provider>,
+  document.getElementById('root'),
 );

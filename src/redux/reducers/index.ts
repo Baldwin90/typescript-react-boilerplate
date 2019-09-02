@@ -1,1 +1,1 @@
-export { reducer as tabsReducer } from './tabsReducer';
+export { reducer as exampleReducer } from './exampleReducer';

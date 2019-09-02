@@ -1,5 +1,8 @@
 import React from 'react';
 
+import ExampleComponent from './components/ExampleComponent';
+import LoginForm from './components/LoginForm';
+
 const App: React.FC = () => (
   <div className="App">
     <header className="App-header">
@@ -16,6 +19,8 @@ const App: React.FC = () => (
       >
         Learn React
       </a>
+      <ExampleComponent />
+      <LoginForm />
     </header>
   </div>
 );
